@@ -99,22 +99,22 @@ def menu(score):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     exit()
-                if event.key == pygame.K_a:
+                elif event.key == pygame.K_a:
                     displayMenu = False
                     weapon = "shotgun"
                     playing = True
-                if event.key == pygame.K_b:
+                elif event.key == pygame.K_b:
                     displayMenu = False
                     weapon = "pistol"
                     playing = True
-                if event.key == pygame.K_c:
+                elif event.key == pygame.K_c:
                     scoreBoard.showHighScores()
-                if event.key == pygame.K_d:
+                elif event.key == pygame.K_d:
                     instructions()
-                if event.key == pygame.K_u:
+                elif event.key == pygame.K_u:
                     displayMenu = False
                     weapon = "uzi"
                     playing = True
@@ -229,14 +229,14 @@ def dolevel(level, target):
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 exit()
-            if e.type == pygame.MOUSEBUTTONDOWN:
+            elif e.type == pygame.MOUSEBUTTONDOWN:
                 target.shoot(birds, animals, clouds)
-            if e.type == pygame.KEYDOWN:
+            elif e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_ESCAPE:
                     running = False
-                if e.key == pygame.K_p:
+                elif e.key == pygame.K_p:
                     paused = not paused
-                if e.key == pygame.K_SPACE:
+                elif e.key == pygame.K_SPACE:
                     target.setShotsLeft(target.getCapacity())
         
         # clear screen and re-blit bg       
@@ -355,9 +355,9 @@ def instructions():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 showIns = False
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     showIns = False
 

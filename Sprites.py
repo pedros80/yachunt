@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ 
 
-yachunt.py
+Sprites.py
 
 YACHunt: yet another computerised hunting game
 
@@ -445,10 +445,7 @@ class Animal(pygame.sprite.Sprite):
                 self.rect.center = center
                 self.rect.x += self.xspeed
                 
-                if self.rect.right < 0 and self.xspeed < 0 and self.alive:
-                    target.moreEscaped()
-                    self.reset()
-                if self.rect.left > self.screen.get_width() and self.xspeed > 0 and self.alive:
+                if (self.rect.right < 0 and self.xspeed < 0 and self.alive) or (self.rect.left > self.screen.get_width() and self.xspeed > 0 and self.alive):
                     target.moreEscaped()
                     self.reset()
         else:
