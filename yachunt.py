@@ -1,9 +1,33 @@
-# YACHunt: yet another computerised hunting game
-#
-# another genuine copy by pedros
-#
-# graphics from ari feldman's gpl spritelib
-# background by steph
+#!/usr/bin/env python
+""" 
+
+yachunt.py
+
+YACHunt: yet another computerised hunting game
+
+another genuine copy by pedros
+
+graphics from ari feldman's gpl spritelib
+background by steph
+
+Copyright (C) 2009-2013 Peter Somerville
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful, 
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+__author__ = "Peter Somerville"
+__email__ = "peterwsomerville@gmail.com"
 
 import pygame
 from pygame.locals import *
@@ -22,7 +46,7 @@ def main():
     score = 0
     while playing:
      
-        playing,weapon = menu(score)
+        playing, weapon = menu(score)
         if weapon is not None:
             score = game(weapon)
 
@@ -30,22 +54,22 @@ def menu(score):
     # Set up the display
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption("YACHunt...Choose Your Weapon")
-    bg = pygame.image.load("img"+os.sep+"bg.bmp")
+    bg = pygame.image.load("img" + os.sep + "bg.bmp")
     
     scoreBoard = ScoreTable()
     
     words = (
-    "YACHunt:",
-    "Yet Another Computerised",
-    "Hunting game",
-    "",
-    "(a) - SHOTGUN - 2 shots, wide area",
-    "(b) - PISTOL - 6 shots, small area",
-    "(c) - high scores",
-    "(d) - instructions",
-    "",
-    "last score %d"%score,
-    "high score %d"%scoreBoard.getHighScore()
+    "YACHunt:", 
+    "Yet Another Computerised", 
+    "Hunting game", 
+    "", 
+    "(a) - SHOTGUN - 2 shots, wide area", 
+    "(b) - PISTOL - 6 shots, small area", 
+    "(c) - high scores", 
+    "(d) - instructions", 
+    "", 
+    "last score %d" % score, 
+    "high score %d" % scoreBoard.getHighScore()
     )
     
     menuLabels = pygame.sprite.Group()
@@ -53,19 +77,19 @@ def menu(score):
     for line in words:
         templabel = Label(40)
         templabel.setText(line)
-        templabel.setCenter((400,lineCount*35))
-        templabel.setColour((0,0,0))
+        templabel.setCenter((400, lineCount*35))
+        templabel.setColour((0, 0, 0))
         menuLabels.add(templabel)
-        lineCount +=1
+        lineCount += 1
     
     displayMenu = True
     weapon = None
     playing = True
     
-    target = Target("shotgun",screen)
+    target = Target("shotgun", screen)
     clouds = pygame.sprite.Group()
     for i in xrange(4):
-        cloud = random.choice([Cloud("large",screen),Cloud("small",screen)])
+        cloud = random.choice([Cloud("large", screen), Cloud("small", screen)])
         clouds.add(cloud)
             
     clock = pygame.time.Clock()
@@ -95,8 +119,8 @@ def menu(score):
                     weapon = "uzi"
                     playing = True
         
-        screen.fill((0,0,0))        
-        screen.blit(bg,(0,0)) 
+        screen.fill((0, 0, 0))        
+        screen.blit(bg, (0, 0)) 
         clouds.update()
         clouds.draw(screen)
         target.update()
@@ -106,7 +130,7 @@ def menu(score):
 
         pygame.display.flip() # draw frame
                     
-    return playing,weapon 
+    return playing, weapon 
         
 
 def game(weapon):
@@ -115,22 +139,22 @@ def game(weapon):
     scoreBoard = ScoreTable()
 
     # player
-    target = Target(weapon,screen)
+    target = Target(weapon, screen)
 
     hunting = True
     while hunting:
-        hunting = dolevel(level,target)
+        hunting = dolevel(level, target)
         if hunting:
             level+=1
             
     scoreBoard.checkScore(target.getScore())
     return target.getScore()  
     
-def dolevel(level,target):
+def dolevel(level, target):
     # Set up the display
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption("YACHunt... Level: %d"%level)
-    bg = pygame.image.load("img"+os.sep+"bg.bmp")
+    bg = pygame.image.load("img" + os.sep + "bg.bmp")
 
     target.setShotsLeft(target.getCapacity())
     
@@ -147,46 +171,46 @@ def dolevel(level,target):
     # birds group
     birds = pygame.sprite.Group()
     for i in xrange(birdlevel):
-        bird = random.choice([Duck(screen),Hawk(screen)])
+        bird = random.choice([Duck(screen), Hawk(screen)])
         birds.add(bird)
    
     # animals group
     animals = pygame.sprite.Group()
     for i in xrange(animallevel):
-        animal = random.choice([Frog(screen),Snake(screen),Turtle(screen),Snail(screen)])
+        animal = random.choice([Frog(screen), Snake(screen), Turtle(screen), Snail(screen)])
         animals.add(animal)
     
-    if random.randint(1,5) == 1:
+    if random.randint(1, 5) == 1:
         animals.add(Cat(screen))
         
     # clouds
     clouds = pygame.sprite.Group()
     for i in xrange(level+2):
-        cloud = random.choice([Cloud("large",screen),Cloud("small",screen)])
+        cloud = random.choice([Cloud("large", screen), Cloud("small", screen)])
         clouds.add(cloud)
     
 
     
     # label objects and positioning    
     scoreLabel = Label(30)
-    scoreLabel.setCenter((50,500))
+    scoreLabel.setCenter((50, 500))
     hitsLabel = Label(30)
-    hitsLabel.setCenter((50,550))
+    hitsLabel.setCenter((50, 550))
     escapedLabel = Label(30)
-    escapedLabel.setCenter((200,500))
+    escapedLabel.setCenter((200, 500))
     missesLabel = Label(30)
-    missesLabel.setCenter((200,550))
+    missesLabel.setCenter((200, 550))
     shotsLeftLabel = Label(30)
     shotsLeftLabel.setCenter((400, 500))
     levelLabel = Label(30)
-    levelLabel.setCenter((400,550))
+    levelLabel.setCenter((400, 550))
     levelLabel.setText("Level: %d"%level)
     goLabel = Label(60)
-    goLabel.setCenter((screen.get_width()/2,screen.get_height()/2))
-    goLabel.setColour((255,0,0))
+    goLabel.setCenter((screen.get_width()/2, screen.get_height()/2))
+    goLabel.setColour((255, 0, 0))
     
     # add to labels group
-    labels = pygame.sprite.Group(levelLabel,scoreLabel,hitsLabel,missesLabel,escapedLabel,shotsLeftLabel,goLabel)
+    labels = pygame.sprite.Group(levelLabel, scoreLabel, hitsLabel, missesLabel, escapedLabel, shotsLeftLabel, goLabel)
     
     # hide mouse
     pygame.mouse.set_visible(False)
@@ -206,7 +230,7 @@ def dolevel(level,target):
             if e.type == pygame.QUIT:
                 exit()
             if e.type == pygame.MOUSEBUTTONDOWN:
-                target.shoot(birds,animals,clouds)
+                target.shoot(birds, animals, clouds)
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_ESCAPE:
                     running = False
@@ -216,8 +240,8 @@ def dolevel(level,target):
                     target.setShotsLeft(target.getCapacity())
         
         # clear screen and re-blit bg       
-        screen.fill((0,0,0))        
-        screen.blit(bg,(0,0))
+        screen.fill((0, 0, 0))        
+        screen.blit(bg, (0, 0))
         totalshots = float(target.getMisses() + target.getHits())
 
         if totalshots > 0:
@@ -257,7 +281,7 @@ def dolevel(level,target):
             return False
         
         if target.getHits() >= level*20:
-            goLabel.setText("Level %d Completed !!"%level)
+            goLabel.setText("Level %d Completed !!" % level)
             labels.update()
             birds.draw(screen)
             animals.draw(screen)
@@ -289,19 +313,19 @@ def instructions():
     # Set up the display
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption("YACHunt...")
-    bg = pygame.image.load("img"+os.sep+"bg.bmp")
+    bg = pygame.image.load("img" + os.sep + "bg.bmp")
     
     words = (
-    "YACHunt:",
-    "Yet Another Computerised",
-    "Hunting game",
-    "",
-    "Shoot the birds and animals",
-    "by clicking when they are targeted.",
-    "If more than 20 escape your shooting, you lose!",
-    "",
-    "Kill two creatures with one round",
-    "to score more points",
+    "YACHunt:", 
+    "Yet Another Computerised", 
+    "Hunting game", 
+    "", 
+    "Shoot the birds and animals", 
+    "by clicking when they are targeted.", 
+    "If more than 20 escape your shooting, you lose!", 
+    "", 
+    "Kill two creatures with one round", 
+    "to score more points", 
     "Shoot the bullet or space bar to reload weapon"
     )
     
@@ -310,17 +334,17 @@ def instructions():
     for line in words:
         templabel = Label(35)
         templabel.setText(line)
-        templabel.setCenter((400,lineCount*35))
-        templabel.setColour((0,0,0))
+        templabel.setCenter((400, lineCount*35))
+        templabel.setColour((0, 0, 0))
         insLabels.add(templabel)
-        lineCount +=1
+        lineCount += 1
     
     clouds = pygame.sprite.Group()
     for i in xrange(4):
-        cloud = random.choice([Cloud("large",screen),Cloud("small",screen)])
+        cloud = random.choice([Cloud("large", screen), Cloud("small", screen)])
         clouds.add(cloud)
     
-    target = Target("shotgun",screen)
+    target = Target("shotgun", screen)
     clock = pygame.time.Clock()
     pygame.mouse.set_visible(False)
 
@@ -337,8 +361,8 @@ def instructions():
                 if event.key == pygame.K_ESCAPE:
                     showIns = False
 
-        screen.fill((0,0,0))        
-        screen.blit(bg,(0,0)) 
+        screen.fill((0, 0, 0))        
+        screen.blit(bg, (0, 0)) 
         clouds.update()
         clouds.draw(screen)
         insLabels.update()
