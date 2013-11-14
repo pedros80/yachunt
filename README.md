@@ -2,7 +2,7 @@
 [Peter Somerville](http://www.pedros-stuffs.com) - peterwsomerville@gmail.com
 
 ### License.
-Standard MIT open source; see LICENSE.txt for more information
+GNU GPL; see LICENSE.txt for more information
 
 ### Usage.
 `python yachunt.py`
