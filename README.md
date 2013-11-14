@@ -12,15 +12,15 @@ Yet Another Computerised Hunting Game.
 
 python/pygame duck hunt clone.
 
--To play:
+### To play:
 
-run the above command then,
+`python yachunt.py` then
 
-select your weapon by pressing a) or b),
+- select your weapon by pressing a) or b),
 
-view high score table by pressing c),
+- view high score table by pressing c),
 
-or read instructions by pressing d).
+- or read instructions by pressing d).
 
 
 (or find the hidden weapon and use that...)
