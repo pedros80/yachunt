@@ -10,7 +10,7 @@ another genuine copy by pedros
 graphics from ari feldman's gpl spritelib
 background by steph
 
-Copyright (C) 2009-2013 Peter Somerville
+Copyright (C) 2009-2014 Peter Somerville
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -96,10 +96,12 @@ class Label(pygame.sprite.Sprite):
         """ give label new text """
         self.text = words
         self.update()
+
     def setColour(self, colour):
         """ give text new colour """
         self.colour = colour
         self.update()
+
     def setCenter(self, center):
         """ give label new center """
         self.center = center
@@ -138,43 +140,18 @@ class Target(pygame.sprite.Sprite):
             self.sngGun = None
         else:
             self.sndGun = pygame.mixer.Sound("wav" + os.sep + "%s.wav" % weapon)
-    
-    def getScore(self):
-        return self.score
-    
-    def getShotsLeft(self):
-        return self.shots
-        
-    def getEscaped(self):
-        return self.escaped
-    
-    def getMisses(self):
-        return self.misses
-        
-    def getHits(self):
-        return self.hits
-    
-    def moreEscaped(self):
-        self.escaped += 1
-    
-    def moreScore(self, score):
-        self.score += score
             
     def draw(self, screen):
-        screen.blit(self.reload.getImage(), self.reload.getRect())
+        screen.blit(self.reload.image, self.reload.rect)
         screen.blit(self.image, self.rect)
-        
-        
-    def getCapacity(self):
-        return self.capacity
-        
+               
     def setShotsLeft(self, shots):
         self.shots = shots  
       
     def shoot(self, birds, animals, clouds):
         
         reloading = False
-        if self.rect.colliderect(self.reload.getRect()):
+        if self.rect.colliderect(self.reload.rect):
             self.shots = self.capacity
             reloading = True
             
@@ -186,28 +163,28 @@ class Target(pygame.sprite.Sprite):
                 shotScore = 0
                 hitCloud = False
                 for cloud in clouds:
-                    if self.rect.colliderect(cloud.getRect()):
+                    if self.rect.colliderect(cloud.rect):
                         hitCloud = True
         
                 if not hitCloud:        
                     for bird in birds:
-                        if self.rect.colliderect(bird.getRect()):
+                        if self.rect.colliderect(bird.rect):
                             # this parrot is no more
                             numHits+=1
-                            bird.setYSpeed(1)
-                            bird.setAlive(False)
-                            if bird.getSound() != None:
-                                bird.stopSound()
-                            shotScore += bird.getXSpeed()
+                            bird.yspeed = 1
+                            bird.alive = False
+                            if bird.birdSound != None:
+                                bird.birdSound.stop()
+                            shotScore += bird.xspeed
                             self.hits += 1
                     for a in animals:
-                        if self.rect.colliderect(a.getRect()):
+                        if self.rect.colliderect(a.rect):
                             numHits += 1
-                            a.setAlive(False)
-                            if a.getXSpeed() < 0:
-                                shotScore -= a.getXSpeed()
+                            a.alive = False
+                            if a.xspeed < 0:
+                                shotScore -= a.xspeed
                             else:
-                                shotScore += a.getXSpeed()
+                                shotScore += a.xspeed
                             self.hits += 1
                     
                 if numHits > 1:
@@ -249,17 +226,10 @@ class Reload(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 500
         self.rect.y = 470
-    
-    def getRect(self):
-        return self.rect
-    
-    def getImage(self):
-        return self.image
 
 class Cloud(pygame.sprite.Sprite):
     
     def __init__(self, size, screen):
-    
         pygame.sprite.Sprite.__init__(self)       
         self.image = pygame.image.load("img" + os.sep + "%scloud.bmp" % size).convert()
         self.image.set_colorkey((0, 0, 0))
@@ -271,7 +241,6 @@ class Cloud(pygame.sprite.Sprite):
         self.screen = screen
         
     def update(self):
-    
         self.rect.x -= self.xspeed
         if random.randint(1, 4) == 1:
             if random.randint(1, 2) == 1:
@@ -283,21 +252,16 @@ class Cloud(pygame.sprite.Sprite):
             self.reset()
             
     def reset(self):
-    
         self.rect.x = self.screen.get_width()
         self.rect.y = random.randint(10, 150)
         self.xspeed = random.randint(1, 3)
         self.yspeed = random.randint(1, 4)
-        
-    def getRect(self):
-        return self.rect
         
         
 class Bird(pygame.sprite.Sprite):
     """class of flying enemy. base class, to be extended by breed"""
     
     def __init__(self, breed, screen):
-        
         pygame.sprite.Sprite.__init__(self)
         # load images
         self.imageMaster = pygame.image.load("img" + os.sep + "%s1.bmp" % breed).convert()
@@ -323,14 +287,13 @@ class Bird(pygame.sprite.Sprite):
         
     def update(self, target):
         """update bird, called once a frame """
-        
         # move bird to left and increase frame count for flapping wings
         self.rect.x += self.xspeed
         self.frame += 1
         
         # bird made it all the way to the end, reset
         if self.rect.left > self.screen.get_width() and self.alive:
-            target.moreEscaped()
+            target.escaped +=1
             self.reset()
             
         # move bird down, if yspeed non-zero
@@ -370,25 +333,8 @@ class Bird(pygame.sprite.Sprite):
         self.rect.y = random.randint(15, 200)
         self.yspeed = 0
         self.alive = True
-        
-    def getXSpeed(self):
-        return self.xspeed
-
-    def getRect(self):
-        return self.rect
     
-    def getSound(self):
-        return self.birdSound
     
-    def stopSound(self):
-        self.birdSound.stop()
-        
-    def setYSpeed(self, speed):
-        self.yspeed = speed
-    
-    def setAlive(self, living):
-        self.alive = living
-
 class Duck(Bird):
     def __init__(self, screen):
         Bird.__init__(self, "duck", screen)
@@ -446,7 +392,7 @@ class Animal(pygame.sprite.Sprite):
                 self.rect.x += self.xspeed
                 
                 if (self.rect.right < 0 and self.xspeed < 0 and self.alive) or (self.rect.left > self.screen.get_width() and self.xspeed > 0 and self.alive):
-                    target.moreEscaped()
+                    target.escaped += 1
                     self.reset()
         else:
             self.reset()
@@ -467,15 +413,6 @@ class Animal(pygame.sprite.Sprite):
 
     def loadImages(self):
         pass
-
-    def setAlive(self, living):
-        self.alive = living
-
-    def getXSpeed(self):
-        return self.xspeed
-
-    def getRect(self):
-        return self.rect
 
 class Frog(Animal):
     

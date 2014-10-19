@@ -147,16 +147,16 @@ def game(weapon):
         if hunting:
             level+=1
             
-    scoreBoard.checkScore(target.getScore())
-    return target.getScore()  
+    scoreBoard.checkScore(target.score)
+    return target.score  
     
 def dolevel(level, target):
     # Set up the display
     screen = pygame.display.set_mode((800, 600))
-    pygame.display.set_caption("YACHunt... Level: %d"%level)
+    pygame.display.set_caption("YACHunt... Level: %d" % level)
     bg = pygame.image.load("img" + os.sep + "bg.bmp")
 
-    target.setShotsLeft(target.getCapacity())
+    target.shots = target.capacity
     
     animallevel = 0
     birdlevel = 0
@@ -188,8 +188,6 @@ def dolevel(level, target):
     for i in xrange(level+2):
         cloud = random.choice([Cloud("large", screen), Cloud("small", screen)])
         clouds.add(cloud)
-    
-
     
     # label objects and positioning    
     scoreLabel = Label(30)
@@ -237,23 +235,23 @@ def dolevel(level, target):
                 elif e.key == pygame.K_p:
                     paused = not paused
                 elif e.key == pygame.K_SPACE:
-                    target.setShotsLeft(target.getCapacity())
+                    target.shots = target.capacity
         
         # clear screen and re-blit bg       
         screen.fill((0, 0, 0))        
         screen.blit(bg, (0, 0))
-        totalshots = float(target.getMisses() + target.getHits())
+        totalshots = float(target.misses + target.hits)
 
         if totalshots > 0:
-            accuracy = float(target.getHits()/totalshots)*100 
+            accuracy = float(target.hits/totalshots)*100 
         else:
             accuracy = 0
         # set labels new text
-        scoreLabel.setText("1Up: %i" % target.getScore())
-        hitsLabel.setText("Hits: %i" % target.getHits())
+        scoreLabel.setText("1Up: %i" % target.score)
+        hitsLabel.setText("Hits: %i" % target.hits)
         missesLabel.setText("Hit Rate: %.2f" % accuracy+"%")
-        escapedLabel.setText("Escaped: %i" % target.getEscaped())
-        shotsLeftLabel.setText("Shots: %i" % target.getShotsLeft())
+        escapedLabel.setText("Escaped: %i" % target.escaped)
+        shotsLeftLabel.setText("Shots: %i" % target.shots)
             
         if not paused:
             # update and draw sprites
@@ -268,7 +266,7 @@ def dolevel(level, target):
             goLabel.setText("Paused!!")
             labels.update()
             
-        if target.getEscaped() == 21:
+        if target.escaped == 21:
             goLabel.setText("Game Over !!")
             labels.update()
             birds.draw(screen)
@@ -280,7 +278,7 @@ def dolevel(level, target):
             pygame.time.wait(2500)
             return False
         
-        if target.getHits() >= level*20:
+        if target.hits >= level*20:
             goLabel.setText("Level %d Completed !!" % level)
             labels.update()
             birds.draw(screen)
@@ -290,9 +288,9 @@ def dolevel(level, target):
             labels.draw(screen)      
             pygame.display.flip()
             if accuracy > 75.0:
-                target.moreScore(50)
+                target.score += 50
             if accuracy == 100.0:
-                target.moreScore(100)
+                target.score += 100
             pygame.time.wait(2500)
             return True  
                      
